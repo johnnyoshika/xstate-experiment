@@ -48,7 +48,7 @@ const authMachine = createMachine<{ errorMessage: string | null }>(
 );
 
 const Authenticator = () => {
-  const [current, send] = useMachine(authMachine);
+  const [state, send] = useMachine(authMachine);
 
   const logIn = () => {
     send({ type: 'LOGIN' });
@@ -67,18 +67,18 @@ const Authenticator = () => {
       }}
     >
       <div>
-        {current.context.errorMessage && (
+        {state.context.errorMessage && (
           <div style={{ color: 'red' }}>
-            {current.context.errorMessage}
+            {state.context.errorMessage}
           </div>
         )}
-        {current.matches('loading') && <div>Loading...</div>}
-        {current.matches('unauthorized') && (
+        {state.matches('loading') && <div>Loading...</div>}
+        {state.matches('unauthorized') && (
           <div>
             <button onClick={logIn}>Log In</button>
           </div>
         )}
-        {current.matches('authorized') && (
+        {state.matches('authorized') && (
           <div>
             Hi Sammy!
             <button onClick={logOut}>Log Out</button>

@@ -31,7 +31,7 @@ const TrafficLight = () => {
       style={{
         display: 'grid',
         placeItems: 'center',
-        height: '100vh',
+        height: 'calc(100vh - 100px)',
       }}
     >
       <div>

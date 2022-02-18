@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { createMachine, interpret } from 'xstate';
+import { createMachine } from 'xstate';
+import { useMachine } from '@xstate/react';
 
 // source: https://www.skcript.com/svr/finite-state-machines-in-react-js-using-xstate/
 
@@ -48,30 +48,14 @@ const authMachine = createMachine(
 );
 
 const Authenticator = () => {
-  const [auth, setAuth] = useState(authMachine.initialState);
-
-  const service = useMemo(
-    () =>
-      interpret(authMachine).onTransition(current =>
-        setAuth(current),
-      ),
-    [setAuth],
-  );
-
-  useEffect(() => {
-    service.start();
-
-    return () => {
-      service.stop();
-    };
-  }, [service]);
+  const [current, send] = useMachine(authMachine);
 
   const logIn = () => {
-    service.send({ type: 'LOGIN' });
+    send({ type: 'LOGIN' });
   };
 
   const logOut = () => {
-    service.send({ type: 'LOGOUT' });
+    send({ type: 'LOGOUT' });
   };
 
   return (
@@ -83,18 +67,18 @@ const Authenticator = () => {
       }}
     >
       <div>
-        {auth.context.errorMessage && (
+        {current.context.errorMessage && (
           <div style={{ color: 'red' }}>
-            {auth.context.errorMessage}
+            {current.context.errorMessage}
           </div>
         )}
-        {auth.value === 'loading' && <div>Loading...</div>}
-        {auth.value === 'unauthorized' && (
+        {current.matches('loading') && <div>Loading...</div>}
+        {current.matches('unauthorized') && (
           <div>
             <button onClick={logIn}>Log In</button>
           </div>
         )}
-        {auth.value === 'authorized' && (
+        {current.matches('authorized') && (
           <div>
             Hi Sammy!
             <button onClick={logOut}>Log Out</button>

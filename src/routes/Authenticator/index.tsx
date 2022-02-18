@@ -3,13 +3,13 @@ import { useMachine } from '@xstate/react';
 
 // source: https://www.skcript.com/svr/finite-state-machines-in-react-js-using-xstate/
 
-const authMachine = createMachine(
+const authMachine = createMachine<{ errorMessage: string | null }>(
   {
     id: 'authentication',
     initial: 'unauthorized',
     context: {
       errorMessage: null,
-    } as { errorMessage: string | null },
+    },
     states: {
       unauthorized: {
         on: {

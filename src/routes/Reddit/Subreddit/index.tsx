@@ -7,8 +7,6 @@ import { createSubredditMachine } from './subredditMachine';
 const Subreddit = ({ name }: { name: string }) => {
   const machine = useMemo(() => createSubredditMachine(name), [name]);
 
-  // This doesn't work and results in a `Machine given to useMachine has changed between renders` warning
-  // https://github.com/statelyai/xstate/issues/1101
   const [current] = useMachine(machine);
   const { subreddit, posts } = current.context;
 

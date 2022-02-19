@@ -1,7 +1,10 @@
-import { assign, createMachine } from 'xstate';
+import type { ActorRefFrom } from 'xstate';
+import { assign, createMachine, spawn } from 'xstate';
+import { createSubredditMachine } from './Subreddit/subredditMachine';
 
 interface RedditContext {
-  subreddit: string | null;
+  subreddits: Record<string, any>;
+  subreddit: ActorRefFrom<typeof createSubredditMachine> | null; // I have no idea if I set this `typeof machineFactory` type correctly
 }
 
 interface RedditEvents {
@@ -16,6 +19,7 @@ export const redditMachine = createMachine<
   id: 'reddit',
   initial: 'idle',
   context: {
+    subreddits: {},
     subreddit: null,
   },
   states: {
@@ -25,8 +29,19 @@ export const redditMachine = createMachine<
   on: {
     SELECT: {
       target: '.selected',
-      actions: assign({
-        subreddit: (context, event) => event.name,
+      actions: assign((context, event) => {
+        let subreddit = context.subreddits[event.name];
+        if (subreddit) return { ...context, subreddit };
+
+        subreddit = spawn(createSubredditMachine(event.name));
+
+        return {
+          subreddits: {
+            ...context.subreddits,
+            [event.name]: subreddit,
+          },
+          subreddit,
+        };
       }),
     },
   },

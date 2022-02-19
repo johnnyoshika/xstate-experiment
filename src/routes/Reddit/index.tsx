@@ -31,11 +31,7 @@ const Reddit = () => {
           ))}
         </select>
       </header>
-      {/*
-        Pass key so React creates a new instance of the component, thereby avoiding the useMachine machine instance problem:
-        https://github.com/statelyai/xstate/issues/1101#issuecomment-1045980659 
-      */}
-      {subreddit && <Subreddit key={subreddit} name={subreddit} />}
+      {subreddit && <Subreddit actor={subreddit} />}
     </main>
   );
 };

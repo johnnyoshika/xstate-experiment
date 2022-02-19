@@ -1,13 +1,15 @@
 // Tutorial: https://xstate.js.org/docs/tutorials/reddit.html#implementing-the-ui
 
-import { useMachine } from '@xstate/react';
-import { useMemo } from 'react';
+import type { ActorRefFrom } from 'xstate';
+import { useActor } from '@xstate/react';
 import { createSubredditMachine } from './subredditMachine';
 
-const Subreddit = ({ name }: { name: string }) => {
-  const machine = useMemo(() => createSubredditMachine(name), [name]);
-
-  const [current] = useMachine(machine);
+const Subreddit = ({
+  actor,
+}: {
+  actor: ActorRefFrom<typeof createSubredditMachine>;
+}) => {
+  const [current] = useActor(actor);
   const { subreddit, posts } = current.context;
 
   return (

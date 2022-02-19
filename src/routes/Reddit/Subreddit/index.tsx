@@ -2,7 +2,7 @@
 
 import type { ActorRefFrom } from 'xstate';
 import { useActor } from '@xstate/react';
-import { createSubredditMachine } from './subredditMachine';
+import { createSubredditMachine } from '../subredditMachine';
 
 const Subreddit = ({
   actor,

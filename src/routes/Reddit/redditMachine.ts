@@ -1,6 +1,6 @@
 import type { ActorRefFrom } from 'xstate';
 import { assign, createMachine, spawn } from 'xstate';
-import { createSubredditMachine } from './Subreddit/subredditMachine';
+import { createSubredditMachine } from './subredditMachine';
 
 interface RedditContext {
   subreddits: Record<string, any>;
